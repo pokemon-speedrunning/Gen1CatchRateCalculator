@@ -17,7 +17,7 @@ $('button').click(function () {
     var pokemon = JSON.parse($('#species').val());
     var catchRate = pokemon.catchRate;
     var baseHP = pokemon.baseHP;
-    var level = $('#level').val();
+    var level = parseInt($('#level').val());
     var game = $('#game').val();
     if (game === "RB") {
         r1Reroll200Cycles = redReroll200;
@@ -43,8 +43,8 @@ $('button').click(function () {
 
     successes = 0;
     for (var hpDV = 0; hpDV < 16; hpDV++) {
-        var hp = (baseHP + hpDV) * 2 * level / 100 + level + 10;
-        var hpFactor = (hp * 255) / ballFactor / (hp / 4);
+        var hp = (((baseHP + hpDV) * 2 * level / 100) >> 0) + level + 10;
+        var hpFactor = ((((hp * 255) / ballFactor) >> 0) / ((hp / 4) >> 0) >> 0);
         for (var ihra = 0; ihra < 256; ihra++) {
             for (var idivstate = 0; idivstate < 65536; idivstate += 4) {
                 var catchMon = true;
