@@ -1,0 +1,43 @@
+extends ../includes/layout
+include ../includes/bootstrap_mixins
+
+prepend pageStyles
+  - var pageTitle = "Home"
+
+append pageContent
+  +jumbotron
+    h1(class="display-4") VS Code Web Sandbox
+    hr(class="my-4")
+    p(class="lead") An environment for robust static web development with VS Code and Live Server
+    p Uses gulp to compile templates in Pug, SASS, and Typescript and minify everything for production
+  +jumbotron
+    h2(class="display-4" id="Setup") Setup
+    hr(class="my-4")
+    p(class="lead") Install VS Code, the Live Server extension, git, and node LTS
+    p Clone this project: "git clone https://github.com/TiKevin83/VSCodeWebSandbox.git"
+    p Run "npm install" in the root directory
+    p Run "npm install --global gulp" for VS Code's sake
+  +jumbotron
+    h2(class="display-4" id="New") New Content
+    hr(class="my-4")
+    p(class="lead") Follow index.pug to extend the layout template with a new file in "src/html/pages" or a further subdirectory
+    p .html files are generated in "dist"
+    p(class="lead") For JS and CSS, Make a new SASS or Typescript file directly under "src/css" and "src/js"
+    p .css and .js files are generated in "dist/css" and "dist/js"
+  +jumbotron
+    h2(class="display-4" id="Live") Live Editing
+    hr(class="my-4")
+    p Set liveServer.settings.root to "/dist" in VS Code's settings.json and restart VS Code
+    p Start with running "gulp clean" and "gulp" to make sure "dist" is up to date
+    p Run "gulp watch" and open "dist/index.html" with live server
+    p Edits to the Pug, SASS, and TypeScript files in "src" are seen by "gulp watch" which triggers any relevant gulp tasks. Live Server sees the resulting changes to the "dist" directory and reloads the browser
+    p See something in the output you don't like? The gulp tasks generate sourcemaps for CSS and JS, so you can follow the chain back and see where a rule or script came from
+  +jumbotron
+    h2(class="display-4" id="Hosting") Hosting
+    hr(class="my-4")
+    p(class="Lead") git subtree push --prefix dist origin gh-pages
+    p The above line commits dist to a gh-pages branch.  We leave /dist out of gitignore to enable this
+    p When referencing internal links, use true relative paths without "/" at the beginning for the paths to work in Github Pages
+
+
+

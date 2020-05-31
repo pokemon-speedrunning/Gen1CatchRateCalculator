@@ -1,0 +1,39 @@
+{
+  "name": "runs.tas.bot",
+  "version": "0.0.1",
+  "description": "TAS Console Verifications",
+  "license": "MIT",
+  "author": "TiKevin83",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tikevin83"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/compat-data": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "babel-loader": "^8.1.0",
+    "del": "^5.1.0",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-csso": "^4.0.1",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-pug": "^4.0.1",
+    "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-uglify": "^3.0.2",
+    "gulp-data": "^1.3.1",
+    "fs": "^0.0.1-security"
+  },
+  "engines": {
+    "node": ">=0.13.0"
+  },
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {},
+  "resolutions": {
+    "@babel/preset-env": "^7.9.0"
+  }
+}

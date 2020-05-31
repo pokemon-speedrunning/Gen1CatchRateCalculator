@@ -1,0 +1,9 @@
+mixin secureScript(sourceUrl, integrityHash)
+  script(src=sourceUrl integrity=integrityHash crossorigin="anonymous")
+
++secureScript("https://code.jquery.com/jquery-3.4.1.slim.min.js",
+  "sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=")
++secureScript("https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js",
+  "sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1")
++secureScript("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js",
+  "sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM")
