@@ -2,7 +2,7 @@
 
 Install VS Code, the Live Server extension, git, and node LTS
 
-Clone this repository: "git clone https://github.com/TiKevin83/VSCodeWebSandbox.git"
+Clone this repository
 
 Run "npm install" in the root directory
 
@@ -24,28 +24,24 @@ Extend the layout template with a new file in "src/html/pages" or a further subd
 
 ### New Scripts and Styles
 
-SCSS files directly under src/css will generate CSS files in dist/css
+SCSS files directly under src/css will generate CSS files in docs/css
 
 src/css/modules holds styles that are only meant to be included in other files
 
-Typescript is pulled from src/js/main.ts into a single bundle for the browser in dist/js/bundle.js
-
-src/js/includes holds local scripts that main.ts can import.  Browserify/tsify bundles those imports along with npm modules for use in the browser
+JS files directly under src/js will generate minified files in docs/js
 
 ### Live Editing
 
-Set liveServer.settings.root to "/dist" in VS Code's settings.json and restart VS Code
+Set liveServer.settings.root to "/docs" in VS Code's settings.json and restart VS Code
 
-Run "gulp watch" and open "dist/index.html" with live server
+Run "gulp watch" and open "docs/index.html" with live server
 
-Edits to the Pug, SASS, and TypeScript files in "src" are seen by "gulp watch" which triggers any relevant gulp tasks.  Live Server sees the resulting changes to the "dist" directory and reloads the browser
+Edits to the Pug, SASS, and JS files in "src" are seen by "gulp watch" which triggers any relevant gulp tasks.  Live Server sees the resulting changes to the "docs" directory and reloads the browser
 
 See something in the output you don't like?  The gulp tasks generate sourcemaps for CSS and JS, so you can follow the chain back and see where a rule or script came from
 
 ### Hosting
 
-dist is included in commits to enable hosting the site quickly in GitHub Pages:
-
-"git subtree push --prefix dist origin gh-pages"
+docs folder is left out of gitignore to enable hosting the site quickly in GitHub Pages, so make sure to gulp before committing
 
 When referencing internal links, use true relative paths without "/" at the beginning for the paths to work in Github Pages
