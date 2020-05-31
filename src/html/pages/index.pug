@@ -30,7 +30,8 @@ append pageContent
           label(for="species") Encounter Species
           select(class="form-control" id="species" aria-describedby="speciesHelp")
             - var pokedex = require("./src/data/pokedex.json")
-            option(value="tauros") Tauros
+              each pokemon in pokedex
+                option(value=`${JSON.stringify(pokemon)}`)=pokemon.name
           small(id="speciesHelp" class="form-text text-muted") Which pokemon you're encountering
       div(class="form-row")
         div(class="col")

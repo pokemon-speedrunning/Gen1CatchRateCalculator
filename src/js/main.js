@@ -1,6 +1,6 @@
-var pokeball = { ballFactor: 12, reroll1: false, reroll2: false }
-var greatball = { ballFactor: 8, reroll1: true, reroll2: false }
-var safariUltraBall = { ballFactor: 12, reroll1: true, reroll2: true }
+var pokeBall = { ballFactor: 12, reroll1: false, reroll2: false };
+var greatBall = { ballFactor: 8, reroll1: true, reroll2: false };
+var safariUltraBall = { ballFactor: 12, reroll1: true, reroll2: true };
 var redReroll200 = 520;
 var redReroll150 = 564;
 var yellowReroll200 = 516;
@@ -9,21 +9,37 @@ var r2RollCycles = 23664;
 var r1Reroll200Cycles;
 var r1Reroll150Cycles;
 var successes;
+var doReroll150;
+var doReroll200;
+var ballFactor;
 
 $('button').click(function () {
-    var catchRate = 45;
+    var pokemon = JSON.parse($('#species').val());
+    var catchRate = pokemon.catchRate;
+    var baseHP = pokemon.baseHP;
     var level = $('#level').val();
-    var baseHP = 75;
-    if ($('#game').val() === "RB") {
+    var game = $('#game').val();
+    if (game === "RB") {
         r1Reroll200Cycles = redReroll200;
         r1Reroll150Cycles = redReroll150;
-    } else if ($('#game').val() === "Y") {
+    } else if (game === "Y") {
         r1Reroll200Cycles = yellowReroll200;
         r1Reroll150Cycles = yellowReroll150;
     }
-    var doReroll150 = true;
-    var doReroll200 = true;
-    var ballFactor = 12;
+    var ball = $('#ball').val();
+    if (ball === "pokeBall") {
+        doReroll150 = pokeBall.reroll1;
+        doReroll200 = pokeBall.reroll2;
+        ballFactor = pokeBall.ballFactor;
+    } else if (ball === "greatBall") {
+        doReroll150 = greatBall.reroll1;
+        doReroll200 = greatBall.reroll2;
+        ballFactor = greatBall.ballFactor;
+    } else if (ball === "ultraBall" || ball === "safariBall") {
+        doReroll150 = safariUltraBall.reroll1;
+        doReroll200 = safariUltraBall.reroll2;
+        ballFactor = safariUltraBall.ballFactor;
+    }
 
     successes = 0;
     for (var hpDV = 0; hpDV < 16; hpDV++) {
