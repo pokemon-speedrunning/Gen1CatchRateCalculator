@@ -6,7 +6,7 @@ mixin navItem(linkName, linkUrl)
     a(class="nav-link", href=linkUrl)= linkName
 
 nav(class="navbar navbar-expand-lg navbar-dark bg-dark")
-  a(class="navbar-brand" href="index.html") A Website Template
+  a(class="navbar-brand" href="index.html") Gen 1 Catch Rate Calculator
   button(class="navbar-toggler"
     type="button"
     data-toggle="collapse"
@@ -18,18 +18,3 @@ nav(class="navbar navbar-expand-lg navbar-dark bg-dark")
   div(class="collapse navbar-collapse", id="navbarSupportedContent")
     ul(class="navbar-nav mr-auto")
       +navItem("Home", "index.html")
-      +navItem("Custom JS/CSS", "custom.html")
-      +navItem("Meta", "meta.html")
-      li(class="nav-item dropdown active")
-        a(class="nav-link dropdown-toggle"
-          href="#"
-          id="navbarDropdown"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false") Walkthrough
-        div(class="dropdown-menu" aria-labelledby="navbarDropdown")
-          +dropdownItem("Setup", "index.html#Setup")
-          +dropdownItem("New Content", "index.html#New")
-          +dropdownItem("Live Editing", "index.html#Live")
-          +dropdownItem("Hosting", "index.html#Hosting")

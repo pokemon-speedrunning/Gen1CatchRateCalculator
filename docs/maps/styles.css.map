@@ -1,0 +1,1 @@
+{"version":3,"sources":["styles.scss"],"names":[],"mappings":"AAEA,U,CACI,a","file":"../css/styles.css","sourcesContent":["@import \"modules/colors.scss\";\r\n\r\n.customBox {\r\n    color: $macatawa-blue;\r\n}"]}

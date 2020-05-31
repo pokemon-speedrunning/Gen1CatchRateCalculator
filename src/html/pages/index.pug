@@ -5,39 +5,39 @@ prepend pageStyles
   - var pageTitle = "Home"
 
 append pageContent
-  +jumbotron
-    h1(class="display-4") VS Code Web Sandbox
-    hr(class="my-4")
-    p(class="lead") An environment for robust static web development with VS Code and Live Server
-    p Uses gulp to compile templates in Pug, SASS, and Typescript and minify everything for production
-  +jumbotron
-    h2(class="display-4" id="Setup") Setup
-    hr(class="my-4")
-    p(class="lead") Install VS Code, the Live Server extension, git, and node LTS
-    p Clone this project: "git clone https://github.com/TiKevin83/VSCodeWebSandbox.git"
-    p Run "npm install" in the root directory
-    p Run "npm install --global gulp" for VS Code's sake
-  +jumbotron
-    h2(class="display-4" id="New") New Content
-    hr(class="my-4")
-    p(class="lead") Follow index.pug to extend the layout template with a new file in "src/html/pages" or a further subdirectory
-    p .html files are generated in "dist"
-    p(class="lead") For JS and CSS, Make a new SASS or Typescript file directly under "src/css" and "src/js"
-    p .css and .js files are generated in "dist/css" and "dist/js"
-  +jumbotron
-    h2(class="display-4" id="Live") Live Editing
-    hr(class="my-4")
-    p Set liveServer.settings.root to "/dist" in VS Code's settings.json and restart VS Code
-    p Start with running "gulp clean" and "gulp" to make sure "dist" is up to date
-    p Run "gulp watch" and open "dist/index.html" with live server
-    p Edits to the Pug, SASS, and TypeScript files in "src" are seen by "gulp watch" which triggers any relevant gulp tasks. Live Server sees the resulting changes to the "dist" directory and reloads the browser
-    p See something in the output you don't like? The gulp tasks generate sourcemaps for CSS and JS, so you can follow the chain back and see where a rule or script came from
-  +jumbotron
-    h2(class="display-4" id="Hosting") Hosting
-    hr(class="my-4")
-    p(class="Lead") git subtree push --prefix dist origin gh-pages
-    p The above line commits dist to a gh-pages branch.  We leave /dist out of gitignore to enable this
-    p When referencing internal links, use true relative paths without "/" at the beginning for the paths to work in Github Pages
+  div(class="container")
+    form
+      div(class="form-row")
+        div(class="col form-group")
+          label(for="game") Game
+          select(class="form-control" id="game" aria-describedby="gameHelp")
+            option(value="RB") Red/Blue
+            option(value="Y") Yellow
+          small(id="gameHelp" class="form-text text-muted") The game you're playing
+        div(class="col form-group")
+          label(for="ball") Poke Ball Type
+          select(class="form-control" id="ball" aria-describedby="ballHelp")
+            option(value="pokeBall") Poke Ball
+            option(value="greatBall") Great Ball
+            option(value="ultraBall") Ultra Ball
+            option(value="safariBall") Safari Ball
+          small(id="ballHelp" class="form-text text-muted") The poke ball you want to use
+        div(class="col form-group")
+          label(for="level") Encounter Level
+          input(type="number" class="form-control" id="level" aria-describedby="levelHelp")
+          small(id="levelHelp" class="form-text text-muted") The level of the Pokemon you want to catch
+        div(class="col form-group")
+          label(for="species") Encounter Species
+          select(class="form-control" id="species" aria-describedby="speciesHelp")
+            - var pokedex = require("./src/data/pokedex.json")
+            option(value="tauros") Tauros
+          small(id="speciesHelp" class="form-text text-muted") Which pokemon you're encountering
+      div(class="form-row")
+        div(class="col")
+          button(type="button" class="btn btn-primary") Check Catch Rate
+      div(class="form-row")
+        div(class="form-group col")
+          output(id="catchRate")
 
-
-
+append pageScripts
+  script(src="js/main.js")

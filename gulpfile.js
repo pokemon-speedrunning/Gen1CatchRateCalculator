@@ -54,7 +54,7 @@ gulp.task('scripts', function () {
 });
 
 gulp.task('clean',  function () {
-    return del(['public']);
+    return del(['docs']);
 });
 
 gulp.task('default', gulp.parallel('pages', 'scripts', 'styles'));
