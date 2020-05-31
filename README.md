@@ -20,7 +20,7 @@ Follow the example index.pug:
 
 Extend the layout template with a new file in "src/html/pages" or a further subdirectory
 
-.html files are generated under "dist" matching the above directory structure
+.html files are generated under "docs" matching the above directory structure
 
 ### New Scripts and Styles
 
