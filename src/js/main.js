@@ -8,10 +8,12 @@ var yellowReroll150 = 560;
 var r2RollCycles = 23664;
 var r1Reroll200Cycles;
 var r1Reroll150Cycles;
-var successes;
+var intendedRate = 0;
+var actualSuccesses = 0;
 var doReroll150;
 var doReroll200;
 var ballFactor;
+var ballRerollNumber;
 
 $('button').click(function () {
     var pokemon = JSON.parse($('#species').val());
@@ -31,20 +33,23 @@ $('button').click(function () {
         doReroll150 = pokeBall.reroll1;
         doReroll200 = pokeBall.reroll2;
         ballFactor = pokeBall.ballFactor;
+        ballRerollNumber = 256;
     } else if (ball === "greatBall") {
         doReroll150 = greatBall.reroll1;
         doReroll200 = greatBall.reroll2;
         ballFactor = greatBall.ballFactor;
+        ballRerollNumber = 201;
     } else if (ball === "ultraBall" || ball === "safariBall") {
         doReroll150 = safariUltraBall.reroll1;
         doReroll200 = safariUltraBall.reroll2;
         ballFactor = safariUltraBall.ballFactor;
+        ballRerollNumber = 151;
     }
 
-    successes = 0;
     for (var hpDV = 0; hpDV < 16; hpDV++) {
         var hp = (((baseHP + hpDV) * 2 * level / 100) >> 0) + level + 10;
-        var hpFactor = ((((hp * 255) / ballFactor) >> 0) / ((hp / 4) >> 0) >> 0);
+        var hpFactor = ((((hp * 255) / ballFactor) >> 0) / ((hp / 4) >> 0)) >> 0;
+        intendedRate += Math.min(catchRate+1,ballRerollNumber) / ballRerollNumber * (hpFactor+1) / 256;
         for (var ihra = 0; ihra < 256; ihra++) {
             for (var idivstate = 0; idivstate < 65536; idivstate += 4) {
                 var catchMon = true;
@@ -73,9 +78,12 @@ $('button').click(function () {
                     hra = (hra + (divstate >>> 8)) & 0xFF;
                     catchMon = hra <= hpFactor;
                 }
-                successes += catchMon ? 1 : 0;
+                actualSuccesses += catchMon ? 1 : 0;
             }
         }
     }
-    $('output').html(`Catch rate: ${parseFloat(successes / 671088.64).toFixed(2)}%`);
+    $('#actualCatchRate').html(`Actual catch rate: <strong>${parseFloat(actualSuccesses / 671088.64).toFixed(2)}%</strong>`);
+    $('#intendedCatchRate').html(`Intended catch rate: <strong>${parseFloat(100*intendedRate/16).toFixed(2)}%</strong>`)
+    actualSuccesses = 0;
+    intendedRate = 0;
 });

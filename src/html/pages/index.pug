@@ -38,7 +38,10 @@ append pageContent
           button(type="button" class="btn btn-primary") Check Catch Rate
       div(class="form-row")
         div(class="form-group col")
-          output(id="catchRate")
+          output(id="actualCatchRate")
+      div(class="form-row")
+        div(class="form-group col")
+          output(id="intendedCatchRate")
 
 append pageScripts
   script(src="js/main.js")
