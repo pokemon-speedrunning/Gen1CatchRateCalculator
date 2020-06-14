@@ -25,14 +25,14 @@ append pageContent
         div(class="col-md form-group")
           label(for="level") Encounter Level
           input(type="number" class="form-control" id="level" aria-describedby="levelHelp")
-          small(id="levelHelp" class="form-text text-muted") The level of the Pokemon you want to catch
+          small(id="levelHelp" class="form-text text-muted") The level of the Pokemon you want to catch 1-100
       div(class="form-row")
         div(class="col-md form-group")
           label(for="species") Encounter Species
-          select(class="form-control" id="species" aria-describedby="speciesHelp")
+          select(class="form-control" id="species" aria-describedby="speciesHelp" style="text-transform: capitalize;")
             - var pokedex = require("./src/data/pokedex.json")
               each pokemon in pokedex
-                option(value=`${JSON.stringify(pokemon)}`)=pokemon.name
+                option(value=`${JSON.stringify(pokemon)}`)=pokemon.name.toLowerCase()
           small(id="speciesHelp" class="form-text text-muted") Which pokemon you're encountering
         div(class="col-md form-group")
           label(for="status") Status Effect

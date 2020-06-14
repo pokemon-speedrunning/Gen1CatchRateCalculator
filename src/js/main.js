@@ -1,50 +1,19 @@
-var pokeBall = { ballFactor: 12, reroll1: false, reroll2: false };
-var greatBall = { ballFactor: 8, reroll1: true, reroll2: false };
-var safariUltraBall = { ballFactor: 12, reroll1: true, reroll2: true };
-var redReroll200 = 520;
-var redReroll150 = 564;
-var yellowReroll200 = 516;
-var yellowReroll150 = 560;
-var r2RollCycles = 23664;
-var r1Reroll200Cycles;
-var r1Reroll150Cycles;
-var intendedRate = 0;
-var actualSuccesses = 0;
-var doReroll150;
-var doReroll200;
-var ballFactor;
-var ballRerollNumber;
+var pokeballs = {pokeBall : {ballFactor: 12, reroll1: false, reroll2: false, ballRerollCutoff: 256},
+    greatBall: {ballFactor: 8, reroll1: true, reroll2: false, ballRerollCutoff: 201},
+    ultraBall: {ballFactor: 12, reroll1: true, reroll2: true, ballRerollCutoff: 151},
+    safariBall: {ballFactor: 12, reroll1: true, reroll2: true, ballRerollCutoff: 151}}
+var gameSpecificCycleCounts = {RB: { reroll1: 520, reroll2: 564},
+    Y: { reroll1: 516, reroll2: 560}}
+var roll2Cycles = 23664;
 
 $('button').click(function () {
+    var intendedRate = 0;
+    var actualSuccesses = 0;
     var pokemon = JSON.parse($('#species').val());
     var catchRate = pokemon.catchRate;
     var baseHP = pokemon.baseHP;
     var level = parseInt($('#level').val());
-    var game = $('#game').val();
-    if (game === "RB") {
-        r1Reroll200Cycles = redReroll200;
-        r1Reroll150Cycles = redReroll150;
-    } else if (game === "Y") {
-        r1Reroll200Cycles = yellowReroll200;
-        r1Reroll150Cycles = yellowReroll150;
-    }
-    var ball = $('#ball').val();
-    if (ball === "pokeBall") {
-        doReroll150 = pokeBall.reroll1;
-        doReroll200 = pokeBall.reroll2;
-        ballFactor = pokeBall.ballFactor;
-        ballRerollNumber = 256;
-    } else if (ball === "greatBall") {
-        doReroll150 = greatBall.reroll1;
-        doReroll200 = greatBall.reroll2;
-        ballFactor = greatBall.ballFactor;
-        ballRerollNumber = 201;
-    } else if (ball === "ultraBall" || ball === "safariBall") {
-        doReroll150 = safariUltraBall.reroll1;
-        doReroll200 = safariUltraBall.reroll2;
-        ballFactor = safariUltraBall.ballFactor;
-        ballRerollNumber = 151;
-    }
+    var ball = pokeballs[$('#ball').val()];
     var currentHPPercent = Math.max(parseInt($('#hpRange').val()), 1);
     var statusLabel = $('#status').val();
     var status = 0;
@@ -53,16 +22,19 @@ $('button').click(function () {
     } else if (["asleep", "frozen"].includes(statusLabel)) {
         status = 25;
     }
+    var game = $('#game').val();
+    var reroll1Cycles = gameSpecificCycleCounts[game].reroll1;
+    var reroll2Cycles = gameSpecificCycleCounts[game].reroll2;
 
     for (var hpDV = 0; hpDV < 16; hpDV++) {
         var maxHP = (((baseHP + hpDV) * 2 * level / 100) >> 0) + level + 10;
-        var hpFactor = (((maxHP * 255) / ballFactor) >> 0);
+        var hpFactor = (((maxHP * 255) / ball.ballFactor) >> 0);
         var currentHPModifier = (((maxHP * (currentHPPercent / 100)) >> 0) / 4) >> 0;
         if (currentHPModifier > 0) {
             hpFactor = (hpFactor / currentHPModifier) >> 0;
         }
         hpFactor = Math.min(hpFactor, 255);
-        intendedRate += status / ballRerollNumber + Math.min(catchRate + 1, ballRerollNumber - status) / ballRerollNumber * (hpFactor + 1) / 256;
+        intendedRate += status / ball.ballRerollCutoff + Math.min(catchRate + 1, ball.ballRerollCutoff - status) / ball.ballRerollCutoff * (hpFactor + 1) / 256;
         for (var ihra = 0; ihra < 256; ihra++) {
             if (ihra < status) {
                 actualSuccesses += 16384;
@@ -74,12 +46,12 @@ $('button').click(function () {
                     var hra = ihra;
                     do {
                         hra = (hra + (divstate >>> 8)) & 0xFF;
-                        if (doReroll200 && hra > 200) {
-                            divstate = (divstate + r1Reroll200Cycles) & 0xFFFF;
+                        if (ball.reroll1 && hra > 200) {
+                            divstate = (divstate + reroll1Cycles) & 0xFFFF;
                             reroll = true;
                         }
-                        else if (doReroll150 && hra > 150) {
-                            divstate = (divstate + r1Reroll150Cycles) & 0xFFFF;
+                        else if (ball.reroll2 && hra > 150) {
+                            divstate = (divstate + reroll2Cycles) & 0xFFFF;
                             reroll = true;
                         }
                         else {
@@ -90,7 +62,7 @@ $('button').click(function () {
                     if (hra > catchRate) {
                         catchMon = false;
                     } else {
-                        divstate = (divstate + r2RollCycles) & 0xFFFF;
+                        divstate = (divstate + roll2Cycles) & 0xFFFF;
                         hra = (hra + (divstate >>> 8)) & 0xFF;
                         catchMon = hra <= hpFactor;
                     }
@@ -106,6 +78,4 @@ $('button').click(function () {
     }
     setRateBar($('#actualRate'), parseFloat(actualSuccesses / 671088.64).toFixed(2));
     setRateBar($('#intendedRate'), parseFloat(100 * intendedRate / 16).toFixed(2));
-    actualSuccesses = 0;
-    intendedRate = 0;
 });
