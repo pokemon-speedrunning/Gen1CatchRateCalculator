@@ -45,45 +45,67 @@ $('button').click(function () {
         ballFactor = safariUltraBall.ballFactor;
         ballRerollNumber = 151;
     }
+    var currentHPPercent = Math.max(parseInt($('#hpRange').val()), 1);
+    var statusLabel = $('#status').val();
+    var status = 0;
+    if (["poisoned", "burned", "paralyzed"].includes(statusLabel)) {
+        status = 12;
+    } else if (["asleep", "frozen"].includes(statusLabel)) {
+        status = 25;
+    }
 
     for (var hpDV = 0; hpDV < 16; hpDV++) {
-        var hp = (((baseHP + hpDV) * 2 * level / 100) >> 0) + level + 10;
-        var hpFactor = ((((hp * 255) / ballFactor) >> 0) / ((hp / 4) >> 0)) >> 0;
-        intendedRate += Math.min(catchRate+1,ballRerollNumber) / ballRerollNumber * (hpFactor+1) / 256;
+        var maxHP = (((baseHP + hpDV) * 2 * level / 100) >> 0) + level + 10;
+        var hpFactor = (((maxHP * 255) / ballFactor) >> 0);
+        var currentHPModifier = (((maxHP * (currentHPPercent / 100)) >> 0) / 4) >> 0;
+        if (currentHPModifier > 0) {
+            hpFactor = (hpFactor / currentHPModifier) >> 0;
+        }
+        hpFactor = Math.min(hpFactor, 255);
+        intendedRate += status / ballRerollNumber + Math.min(catchRate + 1, ballRerollNumber - status) / ballRerollNumber * (hpFactor + 1) / 256;
         for (var ihra = 0; ihra < 256; ihra++) {
-            for (var idivstate = 0; idivstate < 65536; idivstate += 4) {
-                var catchMon = true;
-                var reroll = false;
-                var divstate = idivstate;
-                var hra = ihra;
-                do {
-                    hra = (hra + (divstate >>> 8)) & 0xFF;
-                    if (doReroll200 && hra > 200) {
-                        divstate = (divstate + r1Reroll200Cycles) & 0xFFFF;
-                        reroll = true;
+            if (ihra < status) {
+                actualSuccesses += 16384;
+            } else {
+                for (var idivstate = 0; idivstate < 65536; idivstate += 4) {
+                    var catchMon = true;
+                    var reroll = false;
+                    var divstate = idivstate;
+                    var hra = ihra;
+                    do {
+                        hra = (hra + (divstate >>> 8)) & 0xFF;
+                        if (doReroll200 && hra > 200) {
+                            divstate = (divstate + r1Reroll200Cycles) & 0xFFFF;
+                            reroll = true;
+                        }
+                        else if (doReroll150 && hra > 150) {
+                            divstate = (divstate + r1Reroll150Cycles) & 0xFFFF;
+                            reroll = true;
+                        }
+                        else {
+                            reroll = false;
+                        }
                     }
-                    else if (doReroll150 && hra > 150) {
-                        divstate = (divstate + r1Reroll150Cycles) & 0xFFFF;
-                        reroll = true;
+                    while (reroll);
+                    if (hra > catchRate) {
+                        catchMon = false;
+                    } else {
+                        divstate = (divstate + r2RollCycles) & 0xFFFF;
+                        hra = (hra + (divstate >>> 8)) & 0xFF;
+                        catchMon = hra <= hpFactor;
                     }
-                    else {
-                        reroll = false;
-                    }
+                    actualSuccesses += catchMon ? 1 : 0;
                 }
-                while (reroll);
-                if (hra > catchRate) {
-                    catchMon = false;
-                } else {
-                    divstate = (divstate + r2RollCycles) & 0xFFFF;
-                    hra = (hra + (divstate >>> 8)) & 0xFF;
-                    catchMon = hra <= hpFactor;
-                }
-                actualSuccesses += catchMon ? 1 : 0;
             }
         }
     }
-    $('#actualCatchRate').html(`Actual catch rate: <strong>${parseFloat(actualSuccesses / 671088.64).toFixed(2)}%</strong>`);
-    $('#intendedCatchRate').html(`Intended catch rate: <strong>${parseFloat(100*intendedRate/16).toFixed(2)}%</strong>`)
+
+    function setRateBar($element, percent) {
+        $element.css("width", `${percent}%`).attr("aria-valuenow", percent).html(`${percent}%`);
+        $element[0].className = `progress-bar ${percent >= 50 ? 'bg-success' : 'bg-danger'}`
+    }
+    setRateBar($('#actualRate'), parseFloat(actualSuccesses / 671088.64).toFixed(2));
+    setRateBar($('#intendedRate'), parseFloat(100 * intendedRate / 16).toFixed(2));
     actualSuccesses = 0;
     intendedRate = 0;
 });
