@@ -35,23 +35,23 @@ $('button').click(function () {
         }
         hpFactor = Math.min(hpFactor, 255);
         intendedRate += status / ball.ballRerollCutoff + Math.min(catchRate + 1, ball.ballRerollCutoff - status) / ball.ballRerollCutoff * (hpFactor + 1) / 256;
-        for (var ihra = 0; ihra < 256; ihra++) {
-            if (ihra < status) {
+        for (var initialRNGByte = 0; initialRNGByte < 256; initialRNGByte++) {
+            if (initialRNGByte < status) {
                 actualSuccesses += 16384;
             } else {
-                for (var idivstate = 0; idivstate < 65536; idivstate += 4) {
+                for (var initialDividerWord = 0; initialDividerWord < 65536; initialDividerWord += 4) {
                     var catchMon = true;
                     var reroll = false;
-                    var divstate = idivstate;
-                    var hra = ihra;
+                    var currentDividerWord = initialDividerWord;
+                    var currentRNGByte = initialRNGByte;
                     do {
-                        hra = (hra + (divstate >>> 8)) & 0xFF;
-                        if (ball.reroll1 && hra > 200) {
-                            divstate = (divstate + reroll1Cycles) & 0xFFFF;
+                        currentRNGByte = (currentRNGByte + (currentDividerWord >>> 8)) & 0xFF;
+                        if (ball.reroll1 && currentRNGByte > 200) {
+                            currentDividerWord = (currentDividerWord + reroll1Cycles) & 0xFFFF;
                             reroll = true;
                         }
-                        else if (ball.reroll2 && hra > 150) {
-                            divstate = (divstate + reroll2Cycles) & 0xFFFF;
+                        else if (ball.reroll2 && currentRNGByte > 150) {
+                            currentDividerWord = (currentDividerWord + reroll2Cycles) & 0xFFFF;
                             reroll = true;
                         }
                         else {
@@ -59,12 +59,12 @@ $('button').click(function () {
                         }
                     }
                     while (reroll);
-                    if (hra > catchRate) {
+                    if (currentRNGByte > catchRate) {
                         catchMon = false;
                     } else {
-                        divstate = (divstate + roll2Cycles) & 0xFFFF;
-                        hra = (hra + (divstate >>> 8)) & 0xFF;
-                        catchMon = hra <= hpFactor;
+                        currentDividerWord = (currentDividerWord + roll2Cycles) & 0xFFFF;
+                        currentRNGByte = (currentRNGByte + (currentDividerWord >>> 8)) & 0xFF;
+                        catchMon = currentRNGByte <= hpFactor;
                     }
                     actualSuccesses += catchMon ? 1 : 0;
                 }
