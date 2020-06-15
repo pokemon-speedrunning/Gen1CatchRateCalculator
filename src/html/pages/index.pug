@@ -32,7 +32,7 @@ append pageContent
           select(class="form-control" id="species" aria-describedby="speciesHelp" style="text-transform: capitalize;")
             - var pokedex = require("./src/data/pokedex.json")
               each pokemon in pokedex
-                option(value=`${JSON.stringify(pokemon)}`)=pokemon.name.toLowerCase()
+                option(value!=pokemon)=pokemon.name.toLowerCase()
           small(id="speciesHelp" class="form-text text-muted") Which pokemon you're encountering
         div(class="col-md form-group")
           label(for="status") Status Effect
