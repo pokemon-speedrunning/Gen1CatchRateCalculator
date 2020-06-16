@@ -1,0 +1,4 @@
+{"pokeBall" : {"ballName": "Poke Ball", "ballFactor": 12, "reroll1": false, "reroll2": false, "ballRerollCutoff": 256},
+    "greatBall": {"ballName": "Great Ball", "ballFactor": 8, "reroll1": true, "reroll2": false, "ballRerollCutoff": 201},
+    "ultraBall": {"ballName": "Ultra Ball", "ballFactor": 12, "reroll1": true, "reroll2": true, "ballRerollCutoff": 151},
+    "safariBall": {"ballName": "Safari Ball", "ballFactor": 12, "reroll1": true, "reroll2": true, "ballRerollCutoff": 151}}
