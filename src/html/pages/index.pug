@@ -52,10 +52,12 @@ append pageContent
       .form-row
         .col-md.form-group
           p Actual Catch Chance
+          p.actualRate
           +progressBar("actualRate")
       .form-row
         .col-md.form-group
           p Intended Catch Chance
+          p.intendedRate
           +progressBar("intendedRate")
 
 append pageScripts

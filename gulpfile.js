@@ -61,7 +61,7 @@ gulp.task('default', gulp.parallel('pages', 'scripts', 'styles'));
 
 gulp.task('watch', function () {
     gulp.watch('src/html/**/*.pug', gulp.series('pages'));
-    gulp.watch('src/data/*.json', gulp.series('pages'));
+    gulp.watch('src/data/**/*.json', gulp.series('pages'));
     gulp.watch('src/css/**/*.scss', gulp.series('styles'));
     gulp.watch('src/js/**/*.js', gulp.series('scripts'));
 });
