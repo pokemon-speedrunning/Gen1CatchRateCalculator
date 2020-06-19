@@ -53,6 +53,7 @@ $('button').on('click', function () {
     });
 });
 
-$('level').on('change', function () {
-
+$('#level').on('change', function () {
+    if (this.value < 1) this.value = 1;
+    if (this.value > 100) this.value = 100;
 });

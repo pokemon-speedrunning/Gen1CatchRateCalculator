@@ -12,7 +12,7 @@ append pageContent
         return a["name"].localeCompare(b["name"]);
       });
       const statuseffects = require("./src/data/statuseffects.json");
-    form
+    form(onsubmit="return false;")
       .form-row
         .col-md.form-group
           label(for="game") Game

@@ -14,8 +14,8 @@ const terser = require('gulp-terser-js');
 
 gulp.task('pages', function () {
     return gulp.src('src/html/pages/**/*.pug')
-    .pipe(data(function (file) { return { require: require }; }))
-    .pipe(pug({}))
+        .pipe(data(function (file) { return { require: require }; }))
+        .pipe(pug({}))
         .pipe(htmlmin({
             collapseWhitespace: true,
             collapseBooleanAttributes: true,
@@ -25,36 +25,36 @@ gulp.task('pages', function () {
             sortAttributes: true,
             sortClassName: true
         }))
-    .pipe(gulp.dest('docs'));
+        .pipe(gulp.dest('docs'));
 });
 
 gulp.task('styles', function () {
     return gulp.src('src/css/*.scss')
         .pipe(sourcemaps.init())
-            .pipe(sass({
+        .pipe(sass({
             outputStyle: 'nested',
             precision: 10,
             includePaths: ['.'],
             onError: console.error.bind(console, 'Sass error:')
-            }))
-            .pipe(csso())
+        }))
+        .pipe(csso())
         .pipe(sourcemaps.write('../maps'))
-    .pipe(gulp.dest('docs/css'));
+        .pipe(gulp.dest('docs/css'));
 });
 
 gulp.task('scripts', function () {
     return gulp.src('src/js/*.js')
-    .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(terser({
-        mangle: {
-          toplevel: true
-        }
-      }))
-    .pipe(sourcemaps.write('../maps'))
-    .pipe(gulp.dest('docs/js'));
+        .pipe(sourcemaps.init({ loadMaps: true }))
+        .pipe(terser({
+            mangle: {
+                toplevel: true
+            }
+        }))
+        .pipe(sourcemaps.write('../maps'))
+        .pipe(gulp.dest('docs/js'));
 });
 
-gulp.task('clean',  function () {
+gulp.task('clean', function () {
     return del(['docs']);
 });
 
