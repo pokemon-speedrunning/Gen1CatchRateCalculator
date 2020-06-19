@@ -59,7 +59,7 @@ function recalcCatchRate() {
                     }
                 }
                 while (true);
-                if (currentRNGByte <= pokemon.catchRate) {
+                if ((currentRNGByte - status) <= pokemon.catchRate) {
                     currentDividerWord = (currentDividerWord + roll2Cycles) & 0xFFFF;
                     currentRNGByte = (currentRNGByte + (currentDividerWord >>> 8)) & 0xFF;
                     actualSuccesses += currentRNGByte <= hpFactor ? 1 : 0;
