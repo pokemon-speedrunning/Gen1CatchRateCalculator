@@ -1,8 +1,7 @@
-var gameSpecificCycleCounts = {
+const gameSpecificCycleCounts = {
     RB: { reroll1: 520, reroll2: 564 },
     Y: { reroll1: 516, reroll2: 560 }
 }
-var roll2Cycles = 23664;
 function setRateBar(progressBarClass, percent) {
     var progressBar = $(`#${progressBarClass}`);
     progressBar.css("width", `${percent}%`).attr("aria-valuenow", percent);
@@ -13,16 +12,10 @@ var loadingSpinner = $('.spinner-border');
 
 $('button').on('click', function () {
     loadingSpinner.removeClass('d-none');
-    setTimeout(function () {recalcCatchRate()}, 100);
-});
-
-function recalcCatchRate() {
-    var intendedRate = 0;
-    var actualSuccesses = 0;
     var pokemon = JSON.parse($('#species').val());
     var ball = JSON.parse($('#ball').val());
     var level = parseInt($('#level').val());
-    var currentHPPercent = Math.max(parseInt($('#hpRange').val()), 1);
+    var currentHPPercent = parseInt($('#hpRange').val());
     var status = $('#status').val();
     var game = $('#game').val();
     if (game === "RB") {
@@ -33,41 +26,33 @@ function recalcCatchRate() {
     var reroll1Cycles = gameSpecificCycleCounts[game].reroll1;
     var reroll2Cycles = gameSpecificCycleCounts[game].reroll2;
 
-    for (var hpDV = 0; hpDV < 16; hpDV++) {
-        var maxHP = (((pokemon.baseHP + hpDV) * 2 * level / 100) >> 0) + level + 10;
-        var hpFactor = (((maxHP * 255) / ball.ballFactor) >> 0);
-        var currentHPModifier = (((maxHP * (currentHPPercent / 100)) >> 0) / 4) >> 0;
-        if (currentHPModifier > 0) {
-            hpFactor = (hpFactor / currentHPModifier) >> 0;
-        }
-        hpFactor = Math.min(hpFactor, 255);
-        intendedRate += status / ball.ballRerollCutoff + Math.min(pokemon.catchRate + 1, ball.ballRerollCutoff - status) / ball.ballRerollCutoff * (hpFactor + 1) / 256;
-        actualSuccesses += 16384 * status;
-        for (var initialRNGByte = status; initialRNGByte < 256; initialRNGByte++) {
-            for (var initialDividerWord = 0; initialDividerWord < 65536; initialDividerWord += 4) {
-                var currentDividerWord = initialDividerWord;
-                var currentRNGByte = initialRNGByte;
-                do {
-                    currentRNGByte = (currentRNGByte + (currentDividerWord >>> 8)) & 0xFF;
-                    if (ball.reroll1 && currentRNGByte > 200) {
-                        currentDividerWord = (currentDividerWord + reroll1Cycles) & 0xFFFF;
-                    }
-                    else if (ball.reroll2 && currentRNGByte > 150) {
-                        currentDividerWord = (currentDividerWord + reroll2Cycles) & 0xFFFF;
-                    } else {
-                        break;
-                    }
-                }
-                while (true);
-                if ((currentRNGByte - status) <= pokemon.catchRate) {
-                    currentDividerWord = (currentDividerWord + roll2Cycles) & 0xFFFF;
-                    currentRNGByte = (currentRNGByte + (currentDividerWord >>> 8)) & 0xFF;
-                    actualSuccesses += currentRNGByte <= hpFactor ? 1 : 0;
-                }
+    function createCatchRateWorker(hpDV) {
+        return new Promise((resolve, reject) => {
+            const catchRateWorker = new Worker('js/catchRateWorker.js');
+            catchRateWorker.onmessage = function (e) {
+                resolve(e.data);
             }
-        }
+            catchRateWorker.postMessage([pokemon, ball, level, currentHPPercent, status, reroll1Cycles, reroll2Cycles, hpDV]);
+        });
     }
-    loadingSpinner.addClass('d-none');
-    setRateBar('actualRate', parseFloat(actualSuccesses / 671088.64).toFixed(2));
-    setRateBar('intendedRate', parseFloat(100 * intendedRate / 16).toFixed(2));
-}
+    var promises = [];
+    for (var i = 0; i < 16; i++) {
+        promises.push(createCatchRateWorker(i));
+    }
+
+    Promise.all(promises).then(results => {
+        var actualRate = 0;
+        var intendedRate = 0;
+        results.forEach(function (result) {
+            actualRate += result[0];
+            intendedRate += result[1];
+        });
+        loadingSpinner.addClass('d-none');
+        setRateBar('actualRate', parseFloat(actualRate / 671088.64).toFixed(2));
+        setRateBar('intendedRate', parseFloat(100 * intendedRate / 16).toFixed(2));
+    });
+});
+
+$('level').on('change', function () {
+
+});

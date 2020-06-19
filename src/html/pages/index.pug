@@ -28,7 +28,7 @@ append pageContent
           small.form-text.text-muted(id="ballHelp") The poke ball you want to use
         .col-md.form-group
           label(for="level") Encounter Level
-          input.form-control(type="number" id="level" aria-describedby="levelHelp")
+          input.form-control(type="number" id="level" aria-describedby="levelHelp" value=6 min=1 max=100)
           small.form-text.text-muted(id="levelHelp") The level of the Pokemon you want to catch 1-100
       .form-row
         .col-md.form-group
@@ -45,7 +45,7 @@ append pageContent
           small.form-text.text-muted(id="statusHelp") Status effect if any
         .col-md.form-group
           label(for="hpRange") % of Max HP
-          input.form-control-range(type="range" id="hpRange")
+          input.form-control-range(type="range" id="hpRange" min="1" max="100" value="100")
       .form-row
         .col-md.form-group
           button.btn.btn-primary(type="button")

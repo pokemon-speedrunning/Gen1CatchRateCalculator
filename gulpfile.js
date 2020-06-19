@@ -6,13 +6,11 @@ const pug = require('gulp-pug');
 const htmlmin = require('gulp-htmlmin');
 
 const data = require('gulp-data');
-const fs = require('fs');
 
 const sass = require('gulp-sass');
 const csso = require('gulp-csso');
 
-const uglify = require('gulp-uglify');
-const babel = require('gulp-babel');
+const terser = require('gulp-terser-js');
 
 gulp.task('pages', function () {
     return gulp.src('src/html/pages/**/*.pug')
@@ -47,8 +45,11 @@ gulp.task('styles', function () {
 gulp.task('scripts', function () {
     return gulp.src('src/js/*.js')
     .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(babel({presets: ['@babel/env']}))
-    .pipe(uglify())
+    .pipe(terser({
+        mangle: {
+          toplevel: true
+        }
+      }))
     .pipe(sourcemaps.write('../maps'))
     .pipe(gulp.dest('docs/js'));
 });

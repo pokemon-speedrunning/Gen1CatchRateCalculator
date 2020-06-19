@@ -1,6 +1,6 @@
 ## Initial setup:
 
-Install VS Code, the Live Server extension, git, and node LTS
+Install VS Code, the Live Server extension, git, and Node current
 
 Clone this repository
 
