@@ -1,8 +1,22 @@
-var gameSpecificCycleCounts = {RB: { reroll1: 520, reroll2: 564},
-    Y: { reroll1: 516, reroll2: 560}}
+var gameSpecificCycleCounts = {
+    RB: { reroll1: 520, reroll2: 564 },
+    Y: { reroll1: 516, reroll2: 560 }
+}
 var roll2Cycles = 23664;
+function setRateBar(progressBarClass, percent) {
+    var progressBar = $(`#${progressBarClass}`);
+    progressBar.css("width", `${percent}%`).attr("aria-valuenow", percent);
+    $(`.${progressBarClass}`).html(`${percent}%`);
+    progressBar[0].className = `progress-bar ${percent >= 50 ? 'bg-success' : 'bg-danger'}`
+}
+var loadingSpinner = $('.spinner-border');
 
-$('button').click(function () {
+$('button').on('click', function () {
+    loadingSpinner.removeClass('d-none');
+    setTimeout(function () {recalcCatchRate()}, 100);
+});
+
+function recalcCatchRate() {
     var intendedRate = 0;
     var actualSuccesses = 0;
     var pokemon = JSON.parse($('#species').val());
@@ -28,43 +42,32 @@ $('button').click(function () {
         }
         hpFactor = Math.min(hpFactor, 255);
         intendedRate += status / ball.ballRerollCutoff + Math.min(pokemon.catchRate + 1, ball.ballRerollCutoff - status) / ball.ballRerollCutoff * (hpFactor + 1) / 256;
-        for (var initialRNGByte = 0; initialRNGByte < 256; initialRNGByte++) {
-            if (initialRNGByte < status) {
-                actualSuccesses += 16384;
-            } else {
-                for (var initialDividerWord = 0; initialDividerWord < 65536; initialDividerWord += 4) {
-                    var catchMon = false;
-                    var currentDividerWord = initialDividerWord;
-                    var currentRNGByte = initialRNGByte;
-                    do {
-                        currentRNGByte = (currentRNGByte + (currentDividerWord >>> 8)) & 0xFF;
-                        if (ball.reroll1 && currentRNGByte > 200) {
-                            currentDividerWord = (currentDividerWord + reroll1Cycles) & 0xFFFF;
-                        }
-                        else if (ball.reroll2 && currentRNGByte > 150) {
-                            currentDividerWord = (currentDividerWord + reroll2Cycles) & 0xFFFF;
-                        } else {
-                            break;
-                        }
+        actualSuccesses += 16384 * status;
+        for (var initialRNGByte = status; initialRNGByte < 256; initialRNGByte++) {
+            for (var initialDividerWord = 0; initialDividerWord < 65536; initialDividerWord += 4) {
+                var currentDividerWord = initialDividerWord;
+                var currentRNGByte = initialRNGByte;
+                do {
+                    currentRNGByte = (currentRNGByte + (currentDividerWord >>> 8)) & 0xFF;
+                    if (ball.reroll1 && currentRNGByte > 200) {
+                        currentDividerWord = (currentDividerWord + reroll1Cycles) & 0xFFFF;
                     }
-                    while (true);
-                    if (currentRNGByte <= pokemon.catchRate) {
-                        currentDividerWord = (currentDividerWord + roll2Cycles) & 0xFFFF;
-                        currentRNGByte = (currentRNGByte + (currentDividerWord >>> 8)) & 0xFF;
-                        catchMon = currentRNGByte <= hpFactor;
+                    else if (ball.reroll2 && currentRNGByte > 150) {
+                        currentDividerWord = (currentDividerWord + reroll2Cycles) & 0xFFFF;
+                    } else {
+                        break;
                     }
-                    actualSuccesses += catchMon ? 1 : 0;
+                }
+                while (true);
+                if (currentRNGByte <= pokemon.catchRate) {
+                    currentDividerWord = (currentDividerWord + roll2Cycles) & 0xFFFF;
+                    currentRNGByte = (currentRNGByte + (currentDividerWord >>> 8)) & 0xFF;
+                    actualSuccesses += currentRNGByte <= hpFactor ? 1 : 0;
                 }
             }
         }
     }
-
-    function setRateBar(progressBarClass, percent) {
-        var progressBar = $(`#${progressBarClass}`);
-        progressBar.css("width", `${percent}%`).attr("aria-valuenow", percent);
-        $(`.${progressBarClass}`).html(`${percent}%`);
-        progressBar[0].className = `progress-bar ${percent >= 50 ? 'bg-success' : 'bg-danger'}`
-    }
+    loadingSpinner.addClass('d-none');
     setRateBar('actualRate', parseFloat(actualSuccesses / 671088.64).toFixed(2));
     setRateBar('intendedRate', parseFloat(100 * intendedRate / 16).toFixed(2));
-});
+}

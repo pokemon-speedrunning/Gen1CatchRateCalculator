@@ -48,7 +48,10 @@ append pageContent
           input.form-control-range(type="range" id="hpRange")
       .form-row
         .col-md.form-group
-          button.btn.btn-primary(type="button") Check Catch Rate
+          button.btn.btn-primary(type="button")
+            span.spinner-border.spinner-border-sm.d-none(role="status" aria-hidden="true")
+            span.sr-only Loading...
+            |  Check Catch Rate
       .form-row
         .col-md.form-group
           p Actual Catch Chance
