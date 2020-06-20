@@ -53,14 +53,14 @@ append pageContent
             span.sr-only Loading...
             |  Check Catch Rate
       .form-row
-        .col-md.form-group
+        .col-md.form-group.actualRateGroup
           p Actual Catch Chance
-          p.actualRate
+          p.rate
           +progressBar("actualRate")
       .form-row
-        .col-md.form-group
+        .col-md.form-group.intendedRateGroup
           p Intended Catch Chance
-          p.intendedRate
+          p.rate
           +progressBar("intendedRate")
 
 append pageScripts

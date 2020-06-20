@@ -2,13 +2,14 @@ const gameSpecificCycleCounts = {
     RB: { reroll1: 520, reroll2: 564 },
     Y: { reroll1: 516, reroll2: 560 }
 }
-function setRateBar(progressBarClass, percent) {
-    var progressBar = $(`#${progressBarClass}`);
-    progressBar.css("width", `${percent}%`).attr("aria-valuenow", percent);
-    $(`.${progressBarClass}`).html(`${percent}%`);
-    progressBar[0].className = `progress-bar ${percent >= 50 ? 'bg-success' : 'bg-danger'}`
-}
+var actualRateBar = $('.actualRateGroup');
+var intendedRateBar = $('.intendedRateGroup');
 var loadingSpinner = $('.spinner-border');
+
+function setRateBar(progressElement, percent) {
+    progressElement.find('p.rate').html(`${percent}%`);
+    progressElement.find('.progress-bar').css("width", `${percent}%`).attr("aria-valuenow", percent)[0].className = `progress-bar ${percent >= 50 ? 'bg-success' : 'bg-danger'}`;
+}
 
 $('button').on('click', function () {
     loadingSpinner.removeClass('d-none');
@@ -35,12 +36,8 @@ $('button').on('click', function () {
             catchRateWorker.postMessage([pokemon, ball, level, currentHPPercent, status, reroll1Cycles, reroll2Cycles, hpDV]);
         });
     }
-    var promises = [];
-    for (var i = 0; i < 16; i++) {
-        promises.push(createCatchRateWorker(i));
-    }
 
-    Promise.all(promises).then(results => {
+    Promise.all([...Array(16)].map((x, i) => createCatchRateWorker(i))).then(results => {
         var actualRate = 0;
         var intendedRate = 0;
         results.forEach(function (result) {
@@ -48,8 +45,8 @@ $('button').on('click', function () {
             intendedRate += result[1];
         });
         loadingSpinner.addClass('d-none');
-        setRateBar('actualRate', parseFloat(actualRate / 671088.64).toFixed(2));
-        setRateBar('intendedRate', parseFloat(100 * intendedRate / 16).toFixed(2));
+        setRateBar(actualRateBar, parseFloat(actualRate / 671088.64).toFixed(2));
+        setRateBar(intendedRateBar, parseFloat(100 * intendedRate / 16).toFixed(2));
     });
 });
 
