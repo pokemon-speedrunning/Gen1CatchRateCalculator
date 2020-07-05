@@ -11,7 +11,7 @@ function setRateBar(progressElement, percent) {
     progressElement.find('.progress-bar').css("width", `${percent}%`).attr("aria-valuenow", percent)[0].className = `progress-bar ${percent >= 50 ? 'bg-success' : 'bg-danger'}`;
 }
 
-$('button').on('click', function () {
+$('form button').on('click', function () {
     loadingSpinner.removeClass('d-none');
     var pokemon = JSON.parse($('#species').val());
     var ball = JSON.parse($('#ball').val());
