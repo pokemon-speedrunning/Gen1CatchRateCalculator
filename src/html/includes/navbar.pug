@@ -1,20 +1,20 @@
 mixin dropdownItem(linkName, linkUrl)
-  a(class=css.bootstrap['dropdown-item'] href=linkUrl)= linkName
+  a(class=css.bootstrap.dropdownItem href=linkUrl)= linkName
 
 mixin navItem(linkName, linkUrl)
-  li(class=css.bootstrap['nav-item active'])
-    a(class=css.bootstrap['nav-link'] href=linkUrl)= linkName
+  li(class=css.bootstrap.navItemActive)
+    a(class=css.bootstrap.navLink href=linkUrl)= linkName
 
-nav(class=[css.bootstrap.navbar, css.bootstrap['navbar-expand-lg'], css.bootstrap['navbar-dark'], css.bootstrap['bg-dark']])
-  a(class=css.bootstrap['navbar-brand'] href="index.html") Gen 1 Catch Rate Calculator
-  button(class=css.bootstrap['navbar-toggler']
+nav(class=[css.bootstrap.navbar, css.bootstrap.navbarExpandLg, css.bootstrap.navbarDark, css.bootstrap.bgDark])
+  a(class=css.bootstrap.navbarBrand href="index.html") Gen 1 Catch Rate Calculator
+  button(class=css.bootstrap.navbarToggler
     type="button"
     data-toggle="collapse"
     data-target="#navbarSupportedContent"
     aria-controls="navbarSupportedContent"
     aria-expanded="false"
     aria-label="Toggle navigation")
-    span(class=css.bootstrap['navbar-toggler-icon'])
-  div(class=[css.bootstrap.collapse, css.bootstrap['navbar-collapse']] id="navbarSupportedContent")
-    ul(class=[css.bootstrap['navbar-nav'], css.bootstrap['mr-auto']])
+    span(class=css.bootstrap.navbarTogglerIcon)
+  div(class=[css.bootstrap.collapse, css.bootstrap.navbarCollapse] id="navbarSupportedContent")
+    ul(class=[css.bootstrap.navbarNav, css.bootstrap.mrAuto])
       +navItem("Home", "index.html")

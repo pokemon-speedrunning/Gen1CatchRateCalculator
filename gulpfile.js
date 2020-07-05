@@ -43,7 +43,12 @@ gulp.task('pages', function () {
 gulp.task('styles', function () {
     return gulp.src('src/css/*.scss')
         .pipe(sourcemaps.init())
-        .pipe(postcss([cssmodules({scopeBehaviour: "global", exportGlobals: true})]))
+        .pipe(postcss(
+            [cssmodules(
+                {scopeBehaviour: "global",
+                exportGlobals: true
+            })]
+        ))
         .pipe(sass({
             outputStyle: 'nested',
             precision: 10,
@@ -57,7 +62,13 @@ gulp.task('styles', function () {
 
 gulp.task('globalStyleExport', function () {
     return gulp.src('src/css/modules/*.css')
-        .pipe(postcss([cssmodules({scopeBehaviour: "global", exportGlobals: true})]));
+        .pipe(postcss(
+            [cssmodules(
+                {scopeBehaviour: "global",
+                exportGlobals: true,
+                localsConvention: 'camelCaseOnly'
+            })]
+        ));
 });
 
 gulp.task('styles', gulp.series('styles', 'globalStyleExport'));
