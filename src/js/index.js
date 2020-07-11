@@ -1,31 +1,41 @@
 const gameSpecificCycleCounts = {
-    RB: { reroll1: 520, reroll2: 564 },
-    Y: { reroll1: 516, reroll2: 560 }
+    RB: [520, 564],
+    Y: [516, 560]
 }
 var actualRateBar = $('.actualRateGroup');
 var intendedRateBar = $('.intendedRateGroup');
 var loadingSpinner = $('.spinner-border');
 
 function setRateBar(progressElement, percent) {
+    percent = parseFloat(percent).toFixed(2);
     progressElement.find('p.rate').html(`${percent}%`);
     progressElement.find('.progress-bar').css("width", `${percent}%`).attr("aria-valuenow", percent)[0].className = `progress-bar ${percent >= 50 ? 'bg-success' : 'bg-danger'}`;
 }
 
+function getJsonValue($element) {
+    return JSON.parse($element.val());
+}
+
+function getIntValue($element) {
+    return parseInt($element.val());
+}
+
 $('form button').on('click', function () {
     loadingSpinner.removeClass('d-none');
-    var pokemon = JSON.parse($('#species').val());
-    var ball = JSON.parse($('#ball').val());
-    var level = parseInt($('#level').val());
-    var currentHPPercent = parseInt($('#hpRange').val());
-    var status = $('#status').val();
+
+    var pokemon = getJsonValue($('#species'));
     var game = $('#game').val();
     if (game === "RB") {
         if (["DRAGONAIR", "DRAGONITE"].includes(pokemon.name)) {
             pokemon.catchRate = 45;
         }
     }
-    var reroll1Cycles = gameSpecificCycleCounts[game].reroll1;
-    var reroll2Cycles = gameSpecificCycleCounts[game].reroll2;
+    var catchRateData = [pokemon,
+        getJsonValue($('#ball')),
+        getIntValue($('#level')),
+        getIntValue($('#hpRange')),
+        $('#status').val()]
+        .concat(gameSpecificCycleCounts[game]);
 
     function createCatchRateWorker(hpDV) {
         return new Promise((resolve, reject) => {
@@ -33,7 +43,7 @@ $('form button').on('click', function () {
             catchRateWorker.onmessage = function (e) {
                 resolve(e.data);
             }
-            catchRateWorker.postMessage([pokemon, ball, level, currentHPPercent, status, reroll1Cycles, reroll2Cycles, hpDV]);
+            catchRateWorker.postMessage(catchRateData.concat(hpDV));
         });
     }
 
@@ -45,12 +55,11 @@ $('form button').on('click', function () {
             intendedRate += result[1];
         });
         loadingSpinner.addClass('d-none');
-        setRateBar(actualRateBar, parseFloat(actualRate / 671088.64).toFixed(2));
-        setRateBar(intendedRateBar, parseFloat(100 * intendedRate / 16).toFixed(2));
+        setRateBar(actualRateBar, actualRate / 671088.64);
+        setRateBar(intendedRateBar, 100 * intendedRate / 16);
     });
 });
 
 $('#level').on('change', function () {
-    if (this.value < 1) this.value = 1;
-    if (this.value > 100) this.value = 100;
+    this.value = Math.min(Math.max(this.value, 1), 100);
 });

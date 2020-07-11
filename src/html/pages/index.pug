@@ -16,36 +16,36 @@ append pageContent
       div(class=css.bootstrap.formRow)
         div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
           label(for="game") Game
-          select(class=css.bootstrap.formControl id="game" aria-describedby="gameHelp")
+          select#game(class=css.bootstrap.formControl aria-describedby="gameHelp")
             option(value="RB") Red/Blue
             option(value="Y") Yellow
-          small(class=[css.bootstrap.formText, css.bootstrap.textMuted] id="gameHelp") The game you're playing
+          small#gameHelp(class=[css.bootstrap.formText, css.bootstrap.textMuted]) The game you're playing
         div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
           label(for="ball") Poke Ball Type
-          select(class=css.bootstrap.formControl id="ball" aria-describedby="ballHelp")
+          select#ball(class=css.bootstrap.formControl aria-describedby="ballHelp")
             each ballData in pokeballs
               option(value!=ballData)=ballData.ballName
-          small(class=[css.bootstrap.formText, css.bootstrap.textMuted] id="ballHelp") The poke ball you want to use
+          small#ballHelp(class=[css.bootstrap.formText, css.bootstrap.textMuted]) The poke ball you want to use
         div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
           label(for="level") Encounter Level
-          input(class=css.bootstrap.formControl type="number" id="level" aria-describedby="levelHelp" value=6 min=1 max=100)
-          small(class=[css.bootstrap.formText, css.bootstrap.textMuted] id="levelHelp") The level of the Pokemon you want to catch 1-100
+          input#level(class=css.bootstrap.formControl type="number" aria-describedby="levelHelp" value=6 min=1 max=100)
+          small#levelHelp(class=[css.bootstrap.formText, css.bootstrap.textMuted]) The level of the Pokemon you want to catch 1-100
       div(class=css.bootstrap.formRow)
         div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
           label(for="species") Encounter Species
-          select(class=css.bootstrap.formControl id="species" aria-describedby="speciesHelp" style="text-transform: capitalize;")
+          select#species(class=css.bootstrap.formControl aria-describedby="speciesHelp" style="text-transform: capitalize;")
             each pokemon in pokedex
               option(value!=pokemon)=pokemon.name.toLowerCase()
-          small(class=[css.bootstrap.formText, css.bootstrap.textMuted] id="speciesHelp") Which pokemon you're encountering
+          small#speciesHelp(class=[css.bootstrap.formText, css.bootstrap.textMuted]) Which pokemon you're encountering
         div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
           label(for="status") Status Effect
-          select(class=css.bootstrap.formControl id="status" aria-describedby="statusHelp" style="text-transform: capitalize;")
+          select#status(class=css.bootstrap.formControl aria-describedby="statusHelp" style="text-transform: capitalize;")
             each statusModifier, statusLabel in statuseffects
               option(value=statusModifier)=statusLabel
-          small(class=[css.bootstrap.formText, css.bootstrap.textMuted] id="statusHelp") Status effect if any
+          small#statusHelp(class=[css.bootstrap.formText, css.bootstrap.textMuted]) Status effect if any
         div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
           label(for="hpRange") % of Max HP
-          input(class=css.bootstrap.formControlRange type="range" id="hpRange" min="1" max="100" value="100")
+          input#hpRange(class=css.bootstrap.formControlRange type="range" min="1" max="100" value="100")
       div(class=css.bootstrap.formRow)
         div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
           button(class=[css.bootstrap.btn, css.bootstrap.btnPrimary] type="button")
@@ -53,12 +53,12 @@ append pageContent
             span(class=css.bootstrap.srOnly) Loading...
             |  Check Catch Rate
       div(class=css.bootstrap.formRow)
-        div(class=[css.bootstrap.colMd, css.bootstrap.formGroup, 'actualRateGroup'])
+        .actualRateGroup(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
           p Actual Catch Chance
           p(class='rate')
           +progressBar("actualRate")
       div(class=css.bootstrap.formRow)
-        div(class=[css.bootstrap.colMd, css.bootstrap.formGroup, 'intendedRateGroup'])
+        .intendedRateGroup(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
           p Intended Catch Chance
           p(class='rate')
           +progressBar("intendedRate")
