@@ -2,7 +2,7 @@ mixin dropdownItem(linkName, linkUrl)
   a(class=css.bootstrap.dropdownItem href=linkUrl)=linkName
 
 mixin navItem(linkName, linkUrl)
-  li(class=css.bootstrap.navItemActive)
+  li(class=[css.bootstrap.navItem, css.bootstrap.active])
     a(class=css.bootstrap.navLink href=linkUrl)=linkName
 
 nav(class=[css.bootstrap.navbar, css.bootstrap.navbarExpandLg, css.bootstrap.navbarDark, css.bootstrap.bgDark])
