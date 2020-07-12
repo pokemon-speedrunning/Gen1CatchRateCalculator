@@ -1,12 +1,12 @@
 {
   "name": "gen1catchrates",
   "version": "0.0.1",
-  "description": "TAS Console Verifications",
+  "description": "Pokemon Gen 1 Catch Rate Calculator",
   "license": "MIT",
   "author": "TiKevin83",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tikevin83"
+    "url": "https://github.com/pokemon-speedrunning/Gen1CatchRateCalculator"
   },
   "devDependencies": {
     "del": "^5.1.0",
