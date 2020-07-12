@@ -40,7 +40,7 @@ gulp.task('pages', function () {
         .pipe(gulp.dest('docs'));
 });
 
-gulp.task('styles', function () {
+gulp.task('compileStyles', function () {
     return gulp.src('src/css/*.scss')
         .pipe(sourcemaps.init())
         .pipe(postcss(
@@ -71,7 +71,7 @@ gulp.task('globalStyleExport', function () {
         ));
 });
 
-gulp.task('styles', gulp.series('styles', 'globalStyleExport'));
+gulp.task('styles', gulp.series('compileStyles', 'globalStyleExport'));
 
 gulp.task('scripts', function () {
     return gulp.src('src/js/*.js')
