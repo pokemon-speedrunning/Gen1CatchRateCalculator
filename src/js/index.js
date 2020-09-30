@@ -2,6 +2,10 @@ const gameSpecificCycleCounts = {
     RB: [520, 564],
     Y: [516, 560]
 }
+const gameReroll2Counts = {
+    RB: 0,
+    Y: 152
+}
 var actualRateBar = $('.actualRateGroup');
 var intendedRateBar = $('.intendedRateGroup');
 var loadingSpinner = $('.spinner-border');
@@ -35,7 +39,7 @@ $('form button').on('click', function () {
         getIntValue($('#level')),
         getIntValue($('#hpRange')),
         $('#status').val()]
-        .concat(gameSpecificCycleCounts[game]);
+        .concat(gameSpecificCycleCounts[game].concat(gameReroll2Counts[game]));
 
     function createCatchRateWorker(hpDV) {
         return new Promise((resolve, reject) => {
@@ -61,5 +65,5 @@ $('form button').on('click', function () {
 });
 
 $('#level').on('change', function () {
-    this.value = Math.min(Math.max(this.value, 1), 100);
+    this.value = Math.min(Math.max(this.value, 2), 100);
 });
