@@ -59,7 +59,7 @@ $('form button').on('click', function () {
         hpFactor = Math.min(hpFactor, 255);
         var catchRateData = [pokemon, ball, status, hpFactor]
             .concat(gameSpecificCycleCounts[game]
-            .concat(gameRoll2Counts[game] + roll2Counts[ballIndex][maxHP][curHP] + 48 * (status === 12) + 52 * (status === 25)));
+            .concat(gameRoll2Counts[game] + roll2Counts[ballIndex][maxHP-1][currentHPModifier-1] + 48 * (status === 12) + 52 * (status === 25)));
         return new Promise((resolve, reject) => {
             const catchRateWorker = new Worker('js/catchRateWorker.js');
             catchRateWorker.onmessage = function (e) {
@@ -83,5 +83,5 @@ $('form button').on('click', function () {
 });
 
 $('#level').on('change', function () {
-    this.value = Math.min(Math.max(this.value, 2), 100);
+    this.value = Math.min(Math.max(this.value, 2), 70);
 });
