@@ -2,10 +2,11 @@ const gameSpecificCycleCounts = {
     RB: [520, 564],
     Y: [516, 560]
 }
-const gameReroll2Counts = {
+const gameRoll2Counts = {
     RB: 0,
     Y: 152
 }
+const roll2Counts = $('#roll2Counts').data('roll2counts');
 var actualRateBar = $('.actualRateGroup');
 var intendedRateBar = $('.intendedRateGroup');
 var loadingSpinner = $('.spinner-border');
@@ -34,20 +35,37 @@ $('form button').on('click', function () {
             pokemon.catchRate = 45;
         }
     }
-    var catchRateData = [pokemon,
-        getJsonValue($('#ball')),
-        getIntValue($('#level')),
-        getIntValue($('#hpRange')),
-        $('#status').val()]
-        .concat(gameSpecificCycleCounts[game].concat(gameReroll2Counts[game]));
+    var ball = getJsonValue($('#ball'));
+    var level = getIntValue($('#level'));
+    var currentHPPercent = getIntValue($('#hpRange'));
+    var status = $('#status').val();
+    var ballIndex;
+    if (ball.ballName === "Poke Ball") {
+        ballIndex = 2;
+    } else if (ball.ballName === "Great Ball") {
+        ballIndex = 1;
+    } else {
+        ballIndex = 0;
+    }
 
     function createCatchRateWorker(hpDV) {
+        var maxHP = (((pokemon.baseHP + hpDV) * 2 * level / 100) >> 0) + level + 10;
+        var curHP = (maxHP * (currentHPPercent / 100)) >> 0;
+        var hpFactor = (((maxHP * 255) / ball.ballFactor) >> 0);
+        var currentHPModifier = (curHP / 4) >> 0;
+        if (currentHPModifier > 0) {
+            hpFactor = (hpFactor / currentHPModifier) >> 0;
+        }
+        hpFactor = Math.min(hpFactor, 255);
+        var catchRateData = [pokemon, ball, status, hpFactor]
+            .concat(gameSpecificCycleCounts[game]
+            .concat(gameRoll2Counts[game] + roll2Counts[ballIndex][maxHP][curHP] + 48 * (status === 12) + 52 * (status === 25)));
         return new Promise((resolve, reject) => {
             const catchRateWorker = new Worker('js/catchRateWorker.js');
             catchRateWorker.onmessage = function (e) {
                 resolve(e.data);
             }
-            catchRateWorker.postMessage(catchRateData.concat(hpDV));
+            catchRateWorker.postMessage(catchRateData);
         });
     }
 
