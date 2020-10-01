@@ -57,9 +57,15 @@ $('form button').on('click', function () {
             hpFactor = (hpFactor / currentHPModifier) >> 0;
         }
         hpFactor = Math.min(hpFactor, 255);
-        var catchRateData = [pokemon, ball, status, hpFactor]
-            .concat(gameSpecificCycleCounts[game]
-            .concat(gameRoll2Counts[game] + roll2Counts[ballIndex][maxHP-1][currentHPModifier-1] + 48 * (status === 12) + 52 * (status === 25)));
+        var catchRateData = {
+            "catchRate" : pokemon.catchRate,
+            "ball" : ball,
+            "status" : status,
+            "hpFactor" : hpFactor,
+            "reroll1Count" : gameSpecificCycleCounts[game][0],
+            "reroll2Count" : gameSpecificCycleCounts[game][1],
+            "roll2Count" : gameRoll2Counts[game] + roll2Counts[ballIndex][maxHP-1][currentHPModifier-1] + 48 * (status === 12) + 52 * (status === 25)
+        }
         return new Promise((resolve, reject) => {
             const catchRateWorker = new Worker('js/catchRateWorker.js');
             catchRateWorker.onmessage = function (e) {
