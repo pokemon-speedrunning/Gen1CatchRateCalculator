@@ -28,43 +28,36 @@ function getIntValue($element) {
 $('form button').on('click', function () {
     loadingSpinner.removeClass('d-none');
 
-    var pokemon = getJsonValue($('#species'));
-    var game = $('#game').val();
+    const pokemon = getJsonValue($('#species'));
+    const game = $('#game').val();
     if (game === "RB") {
         if (["DRAGONAIR", "DRAGONITE"].includes(pokemon.name)) {
             pokemon.catchRate = 45;
         }
     }
-    var ball = getJsonValue($('#ball'));
-    var level = getIntValue($('#level'));
-    var currentHPPercent = getIntValue($('#hpRange'));
-    var status = $('#status').val();
-    var ballIndex;
-    if (ball.ballName === "Poke Ball") {
-        ballIndex = 2;
-    } else if (ball.ballName === "Great Ball") {
-        ballIndex = 1;
-    } else {
-        ballIndex = 0;
-    }
+    const ball = getJsonValue($('#ball'));
+    const level = getIntValue($('#level'));
+    const currentHPPercent = getIntValue($('#hpRange'));
+    const status = getIntValue($('#status'));
 
     function createCatchRateWorker(hpDV) {
-        var maxHP = (((pokemon.baseHP + hpDV) * 2 * level / 100) >> 0) + level + 10;
-        var curHP = (maxHP * (currentHPPercent / 100)) >> 0;
-        var hpFactor = (((maxHP * 255) / ball.ballFactor) >> 0);
-        var currentHPModifier = (curHP / 4) >> 0;
+        const maxHP = (((pokemon.baseHP + hpDV) * 2 * level / 100) >> 0) + level + 10;
+        const currentHPModifier = (((maxHP * (currentHPPercent / 100)) >> 0) / 4) >> 0;
+        let hpFactor = (((maxHP * 255) / ball.ballFactor) >> 0);
         if (currentHPModifier > 0) {
             hpFactor = (hpFactor / currentHPModifier) >> 0;
         }
         hpFactor = Math.min(hpFactor, 255);
-        var catchRateData = {
+        const catchRateData = {
             "catchRate" : pokemon.catchRate,
-            "ball" : ball,
+            "ballRerollCutoff" : ball.ballRerollCutoff,
+            "ballReroll1": ball.reroll1,
+            "ballReroll2": ball.reroll2,
             "status" : status,
             "hpFactor" : hpFactor,
             "reroll1Count" : gameSpecificCycleCounts[game][0],
             "reroll2Count" : gameSpecificCycleCounts[game][1],
-            "roll2Count" : gameRoll2Counts[game] + roll2Counts[ballIndex][maxHP-1][currentHPModifier-1] + 48 * (status === 12) + 52 * (status === 25)
+            "roll2Count" : gameRoll2Counts[game] + roll2Counts[ball.ballIndex][maxHP-1][currentHPModifier-1] + 48 * (status === 12) + 52 * (status === 25)
         }
         return new Promise((resolve, reject) => {
             const catchRateWorker = new Worker('js/catchRateWorker.js');
@@ -76,8 +69,8 @@ $('form button').on('click', function () {
     }
 
     Promise.all([...Array(16)].map((x, i) => createCatchRateWorker(i))).then(results => {
-        var actualRate = 0;
-        var intendedRate = 0;
+        let actualRate = 0;
+        let intendedRate = 0;
         results.forEach(function (result) {
             actualRate += result[0];
             intendedRate += result[1];

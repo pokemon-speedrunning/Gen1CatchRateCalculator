@@ -77,9 +77,7 @@ gulp.task('scripts', function () {
     return gulp.src('src/js/*.js')
         .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(terser({
-            mangle: {
-                toplevel: true
-            }
+            ecma: 2018
         }))
         .pipe(sourcemaps.write('../maps'))
         .pipe(gulp.dest('docs/js'));

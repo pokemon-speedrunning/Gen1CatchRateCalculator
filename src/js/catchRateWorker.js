@@ -1,13 +1,5 @@
 onmessage = function (e) {
-    var catchRate = e.data.catchRate;
-    var ballRerollCutoff = e.data.ball.ballRerollCutoff;
-    var ballReroll1 = e.data.ball.reroll1;
-    var ballReroll2 = e.data.ball.reroll2;
-    var status = e.data.status;
-    var hpFactor = e.data.hpFactor;
-    var reroll1Count = e.data.reroll1Count;
-    var reroll2Count = e.data.reroll2Count;
-    var roll2Count = e.data.roll2Count;
+    const {catchRate, ballRerollCutoff, ballReroll1, ballReroll2, status, hpFactor, reroll1Count, reroll2Count, roll2Count} = e.data;
     var intendedRate = status / ballRerollCutoff + Math.min(catchRate + 1, ballRerollCutoff - status) / ballRerollCutoff * (hpFactor + 1) / 256;
     var actualSuccesses = 16384 * status;
     for (var initialRNGByte = status; initialRNGByte < 256; initialRNGByte++) {
