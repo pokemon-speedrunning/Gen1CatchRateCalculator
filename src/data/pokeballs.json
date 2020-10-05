@@ -1,4 +1,4 @@
-{"pokeBall" : {"ballName": "Poke Ball", "ballFactor": 12, "reroll1": false, "reroll2": false, "ballRerollCutoff": 256, "ballIndex" : 2},
-    "greatBall": {"ballName": "Great Ball", "ballFactor": 8, "reroll1": true, "reroll2": false, "ballRerollCutoff": 201, "ballIndex" : 1},
-    "ultraBall": {"ballName": "Ultra Ball", "ballFactor": 12, "reroll1": true, "reroll2": true, "ballRerollCutoff": 151, "ballIndex" : 0},
-    "safariBall": {"ballName": "Safari Ball", "ballFactor": 12, "reroll1": true, "reroll2": true, "ballRerollCutoff": 151, "ballIndex" : 0}}
+{"pokeBall" : {"ballName": "Poke Ball", "ballFactor": 12, "reroll1": false, "reroll2": false, "ballRerollCutoff": 256, "ballIndex" : 1},
+    "greatBall": {"ballName": "Great Ball", "ballFactor": 8, "reroll1": true, "reroll2": false, "ballRerollCutoff": 201, "ballIndex" : 0},
+    "ultraBall": {"ballName": "Ultra Ball", "ballFactor": 12, "reroll1": true, "reroll2": true, "ballRerollCutoff": 151, "ballIndex" : 1},
+    "safariBall": {"ballName": "Safari Ball", "ballFactor": 12, "reroll1": true, "reroll2": true, "ballRerollCutoff": 151, "ballIndex" : 1}}

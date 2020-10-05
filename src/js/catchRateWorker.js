@@ -1,6 +1,6 @@
 onmessage = function (e) {
     const {catchRate, ballRerollCutoff, ballReroll1, ballReroll2, status, hpFactor, reroll1Count, reroll2Count, roll2Count} = e.data;
-    var intendedRate = status / ballRerollCutoff + Math.min(catchRate + 1, ballRerollCutoff - status) / ballRerollCutoff * (hpFactor + 1) / 256;
+    const intendedRate = status / ballRerollCutoff + Math.min(catchRate + 1, ballRerollCutoff - status) / ballRerollCutoff * (hpFactor + 1) / 256;
     var actualSuccesses = 16384 * status;
     for (var initialRNGByte = status; initialRNGByte < 256; initialRNGByte++) {
         for (var initialDividerWord = 0; initialDividerWord < 65536; initialDividerWord += 4) {
@@ -21,7 +21,7 @@ onmessage = function (e) {
             if ((currentRNGByte - status) <= catchRate) {
                 currentDividerWord = (currentDividerWord + roll2Count) & 0xFFFF;
                 currentRNGByte = (currentRNGByte + (currentDividerWord >>> 8)) & 0xFF;
-                actualSuccesses += currentRNGByte <= hpFactor ? 1 : 0;
+                actualSuccesses += currentRNGByte <= hpFactor;
             }
         }
     }
