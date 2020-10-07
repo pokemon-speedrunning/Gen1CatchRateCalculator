@@ -12,7 +12,6 @@ append pageContent
         return a["name"].localeCompare(b["name"]);
       });
       const statuseffects = require("./src/data/statuseffects.json");
-      const roll2Counts = require("./src/data/roll2Counts.json").roll2Counts;
     form(onsubmit="return false;")
       div(class=css.bootstrap.formRow)
         div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
@@ -47,7 +46,6 @@ append pageContent
         div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
           label(for="hpRange") % of Max HP
           input#hpRange(class=css.bootstrap.formControlRange type="range" min="1" max="100" value="100")
-        #roll2Counts(class=[css.bootstrap.dNone] data-roll2counts!=roll2Counts)
       div(class=css.bootstrap.formRow)
         div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
           button(class=[css.bootstrap.btn, css.bootstrap.btnPrimary] type="button")

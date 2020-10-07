@@ -6,7 +6,6 @@ const gameRoll2Counts = {
     RB: 0,
     Y: 152
 }
-const roll2Counts = $('#roll2Counts').data('roll2counts');
 var actualRateBar = $('.actualRateGroup');
 var intendedRateBar = $('.intendedRateGroup');
 var loadingSpinner = $('.spinner-border');
@@ -23,6 +22,10 @@ function getJsonValue($element) {
 
 function getIntValue($element) {
     return parseInt($element.val());
+}
+
+function bitCount (n) {
+    return n.toString(2).match(/1/g).length;
 }
 
 $('form button').on('click', function () {
@@ -43,11 +46,9 @@ $('form button').on('click', function () {
     function createCatchRateWorker(hpDV) {
         const maxHP = (((pokemon.baseHP + hpDV) * 2 * level / 100) >> 0) + level + 10;
         const currentHPModifier = (((maxHP * (currentHPPercent / 100)) >> 0) / 4) >> 0;
-        let hpFactor = (((maxHP * 255) / ball.ballFactor) >> 0);
-        if (currentHPModifier > 0) {
-            hpFactor = (hpFactor / currentHPModifier) >> 0;
-        }
-        hpFactor = Math.min(hpFactor, 255);
+        let c1 = (((maxHP * 255) / ball.ballFactor) >> 0);
+        let c2 = (c1 / currentHPModifier) >> 0;
+        let hpFactor = Math.min(currentHPModifier > 0 ? c2 : c1, 255);
         const catchRateData = {
             "catchRate" : pokemon.catchRate,
             "ballRerollCutoff" : ball.ballRerollCutoff,
@@ -58,9 +59,9 @@ $('form button').on('click', function () {
             "reroll1Count" : gameSpecificCycleCounts[game][0],
             "reroll2Count" : gameSpecificCycleCounts[game][1],
             "roll2Count" : gameRoll2Counts[game]
-            + roll2Counts[ball.ballIndex][maxHP-1][currentHPModifier-1] 
+            + (bitCount(c1) + bitCount(c2)) * 144
             + 48 * (status === 12) + 52 * (status === 25)
-            + 60 * (["Ultra Ball", "Safari Ball"].includes(ball.ballName))
+            + 22308 + 60 * (["Ultra Ball", "Safari Ball"].includes(ball.ballName)) + 48 * ("Great Ball" === ball.ballName)
         }
         return new Promise((resolve, reject) => {
             const catchRateWorker = new Worker('js/catchRateWorker.js');
