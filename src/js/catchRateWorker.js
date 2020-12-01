@@ -7,7 +7,7 @@ onmessage = function (e) {
             var currentDividerWord = initialDividerWord;
             var currentRNGByte = initialRNGByte;
             do {
-                currentRNGByte = (currentRNGByte + (currentDividerWord >>> 8)) & 0xFF;
+                currentRNGByte = (currentRNGByte + (currentDividerWord >>> 8) + 1) & 0xFF;
                 if (ballReroll1 && currentRNGByte > 200) {
                     currentDividerWord = (currentDividerWord + reroll1Count) & 0xFFFF;
                 }
