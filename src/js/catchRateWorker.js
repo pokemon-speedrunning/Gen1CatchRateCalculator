@@ -6,8 +6,7 @@ onmessage = function (e) {
         for (var initialDividerWord = 0; initialDividerWord < 65536; initialDividerWord += 4) {
             var currentDividerWord = initialDividerWord;
             var currentRNGByte = initialRNGByte;
-            do {
-                currentRNGByte = (currentRNGByte + (currentDividerWord >>> 8) + 1) & 0xFF;
+            while(true) {
                 if (ballReroll1 && currentRNGByte > 200) {
                     currentDividerWord = (currentDividerWord + reroll1Count) & 0xFFFF;
                 }
@@ -16,9 +15,13 @@ onmessage = function (e) {
                 } else {
                     break;
                 }
+                currentRNGByte = (currentRNGByte + (currentDividerWord >>> 8) + 1) & 0xFF;
             }
-            while (true);
-            if ((currentRNGByte - status) <= catchRate) {
+
+            if(currentRNGByte < status) {
+                actualSuccesses ++;
+            }
+            else if ((currentRNGByte - status) <= catchRate) {
                 currentDividerWord = (currentDividerWord + roll2Count) & 0xFFFF;
                 currentRNGByte = (currentRNGByte + (currentDividerWord >>> 8)) & 0xFF;
                 actualSuccesses += currentRNGByte <= hpFactor;
