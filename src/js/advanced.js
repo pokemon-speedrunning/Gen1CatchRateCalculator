@@ -24,6 +24,10 @@ function getIntValue($element) {
     return parseInt($element.val());
 }
 
+function getHexValue($element) {
+    return parseInt("0x" + $element.val());
+}
+
 function bitCount (n) {
     return n.toString(2).match(/1/g).length;
 }
@@ -32,10 +36,18 @@ $('form button').on('click', function () {
     loadingSpinner.removeClass('d-none');
     const game = $('#game').val();
     const ball = getJsonValue($('#ball'));
-    const catchRate = getIntValue($('#catchRate'));
-    const currentHP = getIntValue($('#currentHP'));
-    const maxHP = getIntValue($('#maxHP'));
-    const status = getIntValue($('#status'));
+    var catchRate, currentHP, maxHP, status;
+    if ($('#numberFormat').val() === "decimal") {
+        catchRate = getIntValue($('#catchRate'));
+        currentHP = getIntValue($('#currentHP'));
+        maxHP = getIntValue($('#maxHP'));
+        status = getIntValue($('#status'));
+    } else if ($('#numberFormat').val() === "hex") {
+        catchRate = getHexValue($('#catchRate'));
+        currentHP = getHexValue($('#currentHP'));
+        maxHP = getHexValue($('#maxHP'));
+        status = getHexValue($('#status'));
+    }
 
     const currentHPModifier = Math.max(((currentHP / 4) >> 0) & 0xFF, 1);
     let c1 = (((maxHP * 255) / ball.ballFactor) >> 0);
