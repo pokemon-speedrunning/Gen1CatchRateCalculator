@@ -45,7 +45,7 @@ $('form button').on('click', function () {
 
     function createCatchRateWorker(hpDV) {
         const maxHP = (((pokemon.baseHP + hpDV) * 2 * level / 100) >> 0) + level + 10;
-        const currentHPModifier = (((maxHP * (currentHPPercent / 100)) >> 0) / 4) >> 0;
+        const currentHPModifier = Math.max(((((maxHP * (currentHPPercent / 100)) >> 0) / 4) >> 0) & 0xFF, 1);
         let c1 = (((maxHP * 255) / ball.ballFactor) >> 0);
         let c2 = (c1 / currentHPModifier) >> 0;
         let hpFactor = Math.min(currentHPModifier > 0 ? c2 : c1, 255);

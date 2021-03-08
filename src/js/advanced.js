@@ -37,7 +37,7 @@ $('form button').on('click', function () {
     const maxHP = getIntValue($('#maxHP'));
     const status = getIntValue($('#status'));
 
-    const currentHPModifier = (currentHP / 4) >> 0;
+    const currentHPModifier = Math.max(((currentHP / 4) >> 0) & 0xFF, 1);
     let c1 = (((maxHP * 255) / ball.ballFactor) >> 0);
     let c2 = (c1 / currentHPModifier) >> 0;
     let hpFactor = Math.min(currentHPModifier > 0 ? c2 : c1, 255);
