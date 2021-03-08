@@ -1,0 +1,58 @@
+extends ../includes/layout
+include ../includes/bootstrap_mixins
+
+prepend pageStyles
+  - var pageTitle = "Gen 1 Catch Rates"
+
+append pageContent
+  div(class=css.bootstrap.containerFluid)
+    -
+      const pokeballs = require("./src/data/pokeballs.json");
+      const statuseffects = require("./src/data/statuseffects.json");
+    form(onsubmit="return false;")
+      div(class=css.bootstrap.formRow)
+        div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
+          label(for="game") Game
+          select#game(class=css.bootstrap.formControl aria-describedby="gameHelp")
+            option(value="RB") Red/Blue
+            option(value="Y") Yellow
+          small#gameHelp(class=[css.bootstrap.formText, css.bootstrap.textMuted]) The game you're playing
+        div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
+          label(for="ball") Poke Ball Type
+          select#ball(class=css.bootstrap.formControl aria-describedby="ballHelp")
+            each ballData in pokeballs
+              option(value!=ballData)=ballData.ballName
+          small#ballHelp(class=[css.bootstrap.formText, css.bootstrap.textMuted]) The poke ball you want to use
+        div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
+          label(for="catchRate") Encounter Catch Rate
+          input#catchRate(class=css.bootstrap.formControl type="number" aria-describedby="catchRateHelp")
+          small#catchRateHelp(class=[css.bootstrap.formText, css.bootstrap.textMuted]) The Catch Rate the Pokemon
+      div(class=css.bootstrap.formRow)
+        div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
+          label(for="currentHP") Encounter Current HP
+          input#currentHP(class=css.bootstrap.formControl type="number" aria-describedby="currentHPHelp")
+          small#currentHPHelp(class=[css.bootstrap.formText, css.bootstrap.textMuted]) The Current HP of the Pokemon
+        div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
+          label(for="maxHP") Encounter Max HP
+          input#maxHP(class=css.bootstrap.formControl type="number" aria-describedby="maxHPHelp")
+          small#maxHPHelp(class=[css.bootstrap.formText, css.bootstrap.textMuted]) The Max HP of the Pokemon
+        div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
+          label(for="status") Status Effect
+          input#status(class=css.bootstrap.formControl type="number" aria-describedby="statusHelp")
+          small#statusHelp(class=[css.bootstrap.formText, css.bootstrap.textMuted]) Status effect modifier value if any
+      div(class=css.bootstrap.formRow)
+        div(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
+          button(class=[css.bootstrap.btn, css.bootstrap.btnPrimary] type="button")
+            span(class=[css.bootstrap.spinnerBorder, css.bootstrap.spinnerBorderSm, css.bootstrap.dNone] role="status" aria-hidden="true")
+            span(class=css.bootstrap.srOnly) Loading...
+            |  Check Catch Rate
+      div(class=css.bootstrap.formRow)
+        .actualRateGroup(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
+          p Actual Catch Chance
+          p(class='rate')
+          +progressBar("actualRate")
+      div(class=css.bootstrap.formRow)
+        .intendedRateGroup(class=[css.bootstrap.colMd, css.bootstrap.formGroup])
+          p Intended Catch Chance
+          p(class='rate')
+          +progressBar("intendedRate")
