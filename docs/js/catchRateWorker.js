@@ -1,2 +1,0 @@
-onmessage=function(l){const{catchRate:o,ballRerollCutoff:a,ballReroll1:r,ballReroll2:e,status:t,hpFactor:s,reroll1Count:f,reroll2Count:n,roll2Count:c}=l.data,u=t/a+Math.min(o+1,a-t)/a*(s+1)/256;for(var b=16384*t,i=t;i<256;i++)for(var C=0;C<65536;C+=4){for(var R=C,h=i;;){if(r&&h>200)R=R+f&65535;else{if(!(e&&h>150))break;R=R+n&65535}h=h+(R>>>8)+1&255}h<t?b++:h-t<=o&&(b+=(h=h+((R=R+c&65535)>>>8)&255)<=s)}postMessage([b,u]),close()};
-//# sourceMappingURL=../maps/catchRateWorker.js.map
