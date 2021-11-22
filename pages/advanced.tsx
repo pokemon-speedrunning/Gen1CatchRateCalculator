@@ -2,7 +2,7 @@ import { useDeno } from 'aleph/react'
 import React, { useState } from 'react'
 import Navigation from '../components/navigation.tsx'
 import Progress from '../components/progress.tsx'
-import { BallSelect, GameSelect, CatchRateInput, CurrentHPInput, MaxHPInput, StatusInput, NumberFormat} from '../components/inputs/index.tsx'
+import { BallSelect, GameSelect, AdvancedInput, NumberFormat} from '../components/inputs/index.tsx'
 // @ts-ignore
 import pokeBalls from '../lib/pokeballs.json'
 
@@ -97,18 +97,42 @@ export default function Home() {
               <BallSelect onChange={setBall}></BallSelect>
             </div>
             <div className="col">
-              <CatchRateInput isHex={isHex} catchRate={catchRate} onChange={setCatchRate}></CatchRateInput>
+              <AdvancedInput
+                name="catchRate"
+                label="Encounter Catch Rate"
+                helpText="The Catch Rate of the Pokemon"
+                isHex={isHex}
+                value={catchRate}
+                onChange={setCatchRate}></AdvancedInput>
             </div>
           </div>
           <div className="row mb-2">
             <div className="col">
-              <CurrentHPInput isHex={isHex} currentHP={currentHP} onChange={setCurrentHP}></CurrentHPInput>
+              <AdvancedInput
+                name="currentHP"
+                label="Encounter Current HP"
+                helpText="The Current HP of the Pokemon"
+                isHex={isHex}
+                value={currentHP}
+                onChange={setCurrentHP}></AdvancedInput>
             </div>
             <div className="col">
-              <MaxHPInput isHex={isHex} maxHP={maxHP} onChange={setMaxHP}></MaxHPInput>
+              <AdvancedInput
+                name="maxHP"
+                label="Encounter Max HP"
+                helpText="The Max HP of the Pokemon"
+                isHex={isHex}
+                value={maxHP}
+                onChange={setMaxHP}></AdvancedInput>
             </div>
             <div className="col">
-              <StatusInput isHex={isHex} status={status} onChange={setStatus}></StatusInput>
+              <AdvancedInput
+                name="status"
+                label="Status Effect"
+                helpText="Status effect modifier value if any"
+                isHex={isHex}
+                value={status}
+                onChange={setStatus}></AdvancedInput>
             </div>
           </div>
           <div className="row mb-2">

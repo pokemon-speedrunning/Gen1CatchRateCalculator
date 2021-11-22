@@ -7,9 +7,9 @@ export default function BallSelect(props: { onChange: React.Dispatch<any> }) {
         <>
             <label htmlFor="ball">Poke Ball Type</label>
             <select id="ball" className="form-control" aria-describedby="ballHelp"
-                onChange={e => props.onChange(JSON.parse(e.target.value))}>
+                onChange={e => props.onChange(pokeBalls[e.target.value])}>
                 {Object.keys(pokeBalls).map(ballType =>
-                    <option key={ballType} value={JSON.stringify(pokeBalls[ballType])}>{pokeBalls[ballType].ballName}</option>
+                    <option key={ballType} value={ballType}>{pokeBalls[ballType].ballName}</option>
                 )}
             </select>
             <small id="ballHelp" className="form-text text-muted">The poke ball you want to use</small>

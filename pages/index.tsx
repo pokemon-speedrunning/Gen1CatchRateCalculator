@@ -15,7 +15,7 @@ export default function Home() {
   const [ball, setBall] = useState(pokeBalls[Object.keys(pokeBalls)[0]]);
   const [level, setLevel] = useState(6);
   const [species, setSpecies] = useState(pokedex[Object.keys(pokedex)[0]]);
-  const [status, setStatus]: [number, React.Dispatch<React.SetStateAction<number>>] = useState(statusEffects[Object.keys(statusEffects)[0]]);
+  const [status, setStatus] = useState(statusEffects[Object.keys(statusEffects)[0]]);
   const [currentHPPercent, setCurrentHPPercent] = useState(100);
   const [actualRate, setActualRate] = useState(0);
   const [intendedRate, setIntendedRate] = useState(0);
