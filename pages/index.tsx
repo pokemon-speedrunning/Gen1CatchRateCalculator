@@ -64,7 +64,7 @@ export default function Home() {
           + 22308 + 60 * (["Ultra Ball", "Safari Ball"].includes(ball.ballName)? 1 : 0) + 48 * ("Great Ball" === ball.ballName ? 1 : 0)
       }
       return new Promise((resolve, reject) => {
-          const catchRateWorker = new Worker('catchRateWorker.js');
+          const catchRateWorker = new Worker('/Gen1CatchRateCalculator/catchRateWorker.js');
           catchRateWorker.onmessage = function (e) {
               resolve(e);
           }
