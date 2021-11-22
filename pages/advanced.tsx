@@ -2,21 +2,18 @@ import { useDeno } from 'aleph/react'
 import React, { useState } from 'react'
 import Navigation from '../components/navigation.tsx'
 import Progress from '../components/progress.tsx'
-import { BallSelect, GameSelect, HPInput, LevelInput, SpeciesSelect, StatusSelect } from '../components/inputs/index.tsx'
+import { BallSelect, GameSelect, CatchRateInput, CurrentHPInput, MaxHPInput, StatusInput, NumberFormat} from '../components/inputs/index.tsx'
 // @ts-ignore
 import pokeBalls from '../lib/pokeballs.json'
-// @ts-ignore
-import pokedex from '../lib/pokedex.json'
-// @ts-ignore
-import statusEffects from '../lib/statuseffects.json'
 
 export default function Home() {
   const [game, setGame] = useState("RB");
   const [ball, setBall] = useState(pokeBalls[Object.keys(pokeBalls)[0]]);
-  const [level, setLevel] = useState(6);
-  const [species, setSpecies] = useState(pokedex[Object.keys(pokedex)[0]]);
-  const [status, setStatus]: [number, React.Dispatch<React.SetStateAction<number>>] = useState(statusEffects[Object.keys(statusEffects)[0]]);
-  const [currentHPPercent, setCurrentHPPercent] = useState(100);
+  const [catchRate, setCatchRate] = useState(0);
+  const [currentHP, setCurrentHP] = useState(1);
+  const [maxHP, setMaxHP] = useState(1);
+  const [status, setStatus] = useState(0);
+  const [isHex, setIsHex] = useState(true);
   const [actualRate, setActualRate] = useState(0);
   const [intendedRate, setIntendedRate] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -44,13 +41,12 @@ export default function Home() {
     setLoading(true);
 
     function createCatchRateWorker(hpDV: number) : Promise<MessageEvent> {
-      const maxHP = (((species.baseHP + hpDV) * 2 * level / 100) >> 0) + level + 10;
-      const currentHPModifier = Math.max(((((maxHP * (currentHPPercent / 100)) >> 0) / 4) >> 0) & 0xFF, 1);
+      const currentHPModifier = Math.max(((currentHP / 4) >> 0) & 0xFF, 1);
       let c1 = (((maxHP * 255) / ball.ballFactor) >> 0);
       let c2 = (c1 / currentHPModifier) >> 0;
       let hpFactor = Math.min(currentHPModifier > 0 ? c2 : c1, 255);
       const catchRateData = {
-          "catchRate" : species.catchRate,
+          "catchRate" : catchRate,
           "ballRerollCutoff" : ball.ballRerollCutoff,
           "ballReroll1": ball.reroll1,
           "ballReroll2": ball.reroll2,
@@ -88,7 +84,7 @@ export default function Home() {
   return (
     <div className="page">
       <head>
-        <title>Pokemon Speedrunning - Gen 1 Catch Rate Calculator</title>
+        <title>Pokemon Speedrunning - Advanced Gen 1 Catch Rate Calculator</title>
       </head>
       <Navigation></Navigation>
       <div className="container-fluid">
@@ -101,18 +97,23 @@ export default function Home() {
               <BallSelect onChange={setBall}></BallSelect>
             </div>
             <div className="col">
-              <LevelInput level={level} onChange={setLevel}></LevelInput>
+              <CatchRateInput isHex={isHex} catchRate={catchRate} onChange={setCatchRate}></CatchRateInput>
             </div>
           </div>
           <div className="row mb-2">
             <div className="col">
-              <SpeciesSelect onChange={setSpecies}></SpeciesSelect>
+              <CurrentHPInput isHex={isHex} currentHP={currentHP} onChange={setCurrentHP}></CurrentHPInput>
             </div>
             <div className="col">
-              <StatusSelect onChange={setStatus}></StatusSelect>
+              <MaxHPInput isHex={isHex} maxHP={maxHP} onChange={setMaxHP}></MaxHPInput>
             </div>
             <div className="col">
-              <HPInput currentHPPercent={currentHPPercent} onChange={setCurrentHPPercent}></HPInput>
+              <StatusInput isHex={isHex} status={status} onChange={setStatus}></StatusInput>
+            </div>
+          </div>
+          <div className="row mb-2">
+            <div className="col">
+              <NumberFormat isHex={isHex} onChange={setIsHex}></NumberFormat>
             </div>
           </div>
           <div className="row mb-2">

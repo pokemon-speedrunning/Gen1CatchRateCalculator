@@ -25,8 +25,8 @@ export default function Navigation() {
           </button>
           <div id="navbarSupportedContent" className="collapse navbar-collapse">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <NavLink linkName="Home" linkUrl="index.html"></NavLink>
-              <NavLink linkName="Advanced" linkUrl="advanced.html"></NavLink>
+              <NavLink linkName="Home" linkUrl="/Gen1CatchRateCalculator"></NavLink>
+              <NavLink linkName="Advanced" linkUrl="/Gen1CatchRateCalculator/advanced"></NavLink>
             </ul>
           </div>
         </div>
